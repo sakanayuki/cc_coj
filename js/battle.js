@@ -157,11 +157,12 @@ function renderButtons() {
 
 function renderMulligan() {
   const ov = $('mulligan-ov');
-  if (view.phase !== 'mulligan') {
-    ov.hidden = true;
-    return;
-  }
-  ov.hidden = false;
+  const open = view.phase === 'mulligan';
+  // hidden属性に加えてインラインstyleでも制御する
+  // （古いキャッシュ等でCSSの[hidden]ルールが効かない場合でも確実に閉じるため）
+  ov.hidden = !open;
+  ov.style.display = open ? 'flex' : 'none';
+  if (!open) return;
   const handEl = $('mulligan-hand');
   handEl.innerHTML = '';
   for (const h of view.players[mySeat].hand) {
