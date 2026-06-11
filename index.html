@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CODE OF CLONE - COJ風オンラインカードバトル</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+</head>
+<body>
+
+  <!-- ===== タイトル画面 ===== -->
+  <section id="screen-title" class="screen active">
+    <div class="title-wrap">
+      <p class="title-sub">DIGITAL CARD BATTLE</p>
+      <h1 class="title-logo">CODE OF<br><span>CLONE</span></h1>
+      <p class="title-desc">IDを交換して友達とP2P対戦できるカードゲーム</p>
+      <nav class="title-menu">
+        <button id="btn-to-match" class="btn btn-primary btn-big">対戦する</button>
+        <button id="btn-to-deck" class="btn btn-big">デッキ構築</button>
+        <button id="btn-to-rules" class="btn btn-big">遊び方</button>
+      </nav>
+      <p class="title-note">非公式のファンメイド作品です。SEGA社の素材は使用していません。</p>
+    </div>
+  </section>
+
+  <!-- ===== 遊び方画面 ===== -->
+  <section id="screen-rules" class="screen">
+    <header class="screen-head">
+      <h2>遊び方</h2>
+      <button class="btn btn-back" data-back>タイトルへ</button>
+    </header>
+    <div class="rules-body">
+      <h3>勝利条件</h3>
+      <p>お互いライフ7からスタート。相手のライフを0にしたら勝利！</p>
+
+      <h3>ターンの流れ</h3>
+      <p>自分のターン開始時にCPが全回復し、CP上限が1増えます（最初のターンは2、最大7）。カードを2枚引き、CPを使ってユニット召喚・トリガーセット・アタックなどを行い、ターン終了を押します。手札の上限は7枚です。</p>
+
+      <h3>ユニットとアタック</h3>
+      <ul>
+        <li>ユニットはCPを消費して召喚（フィールドは最大5体）。召喚したターンはアタックできません（ブロックは可能）。</li>
+        <li>アタックすると相手はユニットでブロックできます。ブロックされたらBPの高い方が勝ち、負けた方は破壊（同値は相打ち）。</li>
+        <li>ブロックされなければ相手のライフに1ダメージ。</li>
+        <li>アタック・ブロックには行動権を消費します。行動権は自分のターン開始時に回復します。</li>
+        <li>戦闘に勝利したユニットはLVが上がり（最大LV3、BP+1000）、BPダメージが回復。LV3になった時は行動権も回復します。</li>
+      </ul>
+
+      <h3>トリガーゾーン</h3>
+      <ul>
+        <li>トリガー/インターセプトカードは裏向きでセットできます（最大4枚）。</li>
+        <li><b>トリガー</b>は条件を満たすと自動で発動します。</li>
+        <li><b>インターセプト</b>は戦闘などの条件を満たし、CPが足りていれば自動で発動します（CPを消費）。</li>
+      </ul>
+
+      <h3>オーバーライド</h3>
+      <p>手札の同名カードを重ねるとカードがレベルアップし、カードを1枚引きます。レベルの高いユニットはBPが高い状態（LVごとに+1000）で召喚されます。</p>
+
+      <h3>進化ユニット</h3>
+      <p>自分のフィールドのユニットに重ねて召喚します。元のユニットの行動権を引き継ぎ、出したターンでもアタックできます。</p>
+
+      <h3>固定能力</h3>
+      <ul>
+        <li><b>スピードムーブ</b>: 召喚したターンでもアタックできる。</li>
+        <li><b>貫通</b>: 戦闘に勝利した時、相手プレイヤーのライフに1ダメージ。</li>
+      </ul>
+
+      <h3>マッチング方法</h3>
+      <p>ホスト側が「ルームを作成」してIDを発行し、そのIDをチャットなどで相手に伝えます。ゲスト側がIDを入力して接続すると対戦が始まります（P2P直接通信）。</p>
+    </div>
+  </section>
+
+  <!-- ===== デッキ構築画面 ===== -->
+  <section id="screen-deck" class="screen">
+    <header class="screen-head">
+      <h2>デッキ構築</h2>
+      <div class="deck-controls">
+        <select id="deck-select"></select>
+        <input id="deck-name" type="text" placeholder="デッキ名" maxlength="20">
+        <button id="btn-deck-save" class="btn btn-primary">保存</button>
+        <button id="btn-deck-clear" class="btn">クリア</button>
+        <button id="btn-deck-delete" class="btn btn-danger">削除</button>
+        <button class="btn btn-back" data-back>タイトルへ</button>
+      </div>
+    </header>
+    <div class="deck-body">
+      <div class="deck-pool">
+        <div class="deck-filters" id="deck-filters">
+          <button class="filter-btn active" data-color="all">全て</button>
+          <button class="filter-btn" data-color="red">赤</button>
+          <button class="filter-btn" data-color="yellow">黄</button>
+          <button class="filter-btn" data-color="blue">青</button>
+          <button class="filter-btn" data-color="green">緑</button>
+          <button class="filter-btn" data-color="none">無</button>
+        </div>
+        <div class="pool-grid" id="pool-grid"></div>
+      </div>
+      <aside class="deck-list-wrap">
+        <div class="deck-count" id="deck-count">0 / 40</div>
+        <div class="deck-list" id="deck-list"></div>
+        <p class="deck-hint">カードをクリックで追加、デッキ内をクリックで1枚削除。同名は3枚まで、40枚ちょうどで保存できます。</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===== マッチング画面 ===== -->
+  <section id="screen-match" class="screen">
+    <header class="screen-head">
+      <h2>マッチング</h2>
+      <button class="btn btn-back" data-back>タイトルへ</button>
+    </header>
+    <div class="match-body">
+      <div class="match-setup">
+        <label>プレイヤー名
+          <input id="match-name" type="text" placeholder="PLAYER" maxlength="12">
+        </label>
+        <label>使用デッキ
+          <select id="match-deck"></select>
+        </label>
+      </div>
+      <div class="match-panels">
+        <div class="match-panel">
+          <h3>ルームを作成（ホスト）</h3>
+          <p>IDを発行して相手に伝えてください。</p>
+          <button id="btn-host" class="btn btn-primary btn-big">IDを発行して待つ</button>
+          <div class="room-code-wrap" id="room-code-wrap" hidden>
+            <div class="room-code" id="room-code"></div>
+            <button id="btn-copy-code" class="btn">コピー</button>
+          </div>
+        </div>
+        <div class="match-panel">
+          <h3>ルームに参加（ゲスト）</h3>
+          <p>相手から教えてもらったIDを入力してください。</p>
+          <input id="join-code" type="text" placeholder="例: A7K2XQ" maxlength="6" autocomplete="off">
+          <button id="btn-join" class="btn btn-primary btn-big">接続する</button>
+        </div>
+      </div>
+      <div class="match-status" id="match-status"></div>
+    </div>
+  </section>
+
+  <!-- ===== 対戦画面 ===== -->
+  <section id="screen-battle" class="screen">
+    <div class="battle-wrap">
+      <div class="player-bar opp" id="opp-info"></div>
+      <div class="zone-row">
+        <div class="trigger-zone" id="opp-trigger"></div>
+        <div class="pile-info" id="opp-piles"></div>
+      </div>
+      <div class="field" id="opp-field"></div>
+      <div class="battle-mid">
+        <div class="battle-banner" id="battle-banner"></div>
+        <div class="battle-log" id="battle-log"></div>
+        <div class="battle-btns">
+          <button id="btn-end-turn" class="btn btn-primary">ターン終了</button>
+          <button id="btn-no-block" class="btn btn-warn" hidden>ブロックしない</button>
+          <button id="btn-surrender" class="btn btn-danger">投了</button>
+        </div>
+      </div>
+      <div class="field" id="my-field"></div>
+      <div class="zone-row">
+        <div class="trigger-zone" id="my-trigger"></div>
+        <div class="pile-info" id="my-piles"></div>
+      </div>
+      <div class="player-bar mine" id="my-info"></div>
+      <div class="hand" id="my-hand"></div>
+    </div>
+
+    <!-- マリガンオーバーレイ -->
+    <div class="overlay" id="mulligan-ov" hidden>
+      <div class="overlay-box">
+        <h3>初期手札</h3>
+        <div class="hand" id="mulligan-hand"></div>
+        <div class="overlay-btns">
+          <button id="btn-mulligan" class="btn">引き直す</button>
+          <button id="btn-keep" class="btn btn-primary">このまま開始</button>
+        </div>
+        <p id="mulligan-wait" hidden>相手の準備を待っています…</p>
+      </div>
+    </div>
+
+    <!-- カードアクションメニュー -->
+    <div class="card-menu" id="card-menu" hidden></div>
+  </section>
+
+  <!-- ===== リザルト画面 ===== -->
+  <section id="screen-result" class="screen">
+    <div class="result-wrap">
+      <h2 class="result-title" id="result-title"></h2>
+      <p class="result-reason" id="result-reason"></p>
+      <div class="result-stats" id="result-stats"></div>
+      <button id="btn-result-title" class="btn btn-primary btn-big">タイトルへ戻る</button>
+    </div>
+  </section>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
