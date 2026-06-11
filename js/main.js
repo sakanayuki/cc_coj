@@ -220,9 +220,9 @@ function checkOver() {
 
 function showResult() {
   const v = app.view;
-  const outcome = v.winner === -1 ? 'draw' : (v.winner === app.seat ? 'win' : 'lose');
+  const outcome = v.winner === app.seat ? 'win' : 'lose';
   fillResult(outcome, v.reason, [
-    `経過ターン: ${Math.min(v.turn, 50)}`,
+    `経過ターン: ${Math.min(Math.ceil(v.turn / 2), 10)}`,
     `あなたの残りライフ: ${Math.max(0, v.players[app.seat].life)}`,
     `相手の残りライフ: ${Math.max(0, v.players[1 - app.seat].life)}`,
   ]);

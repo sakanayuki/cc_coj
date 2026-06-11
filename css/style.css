@@ -1,6 +1,9 @@
 /* CODE OF CLONE - スタイル */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* hidden属性はCSSのdisplay指定より常に優先する */
+[hidden] { display: none !important; }
+
 :root {
   --bg: #0a0e1a;
   --bg2: #121a2e;

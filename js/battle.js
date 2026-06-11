@@ -1,7 +1,7 @@
 // 対戦画面のUI制御
 
 import { CARD_MAP, TYPE_NAMES, COLOR_NAMES } from './cards.js';
-import { MAX_TRIGGER, MAX_FIELD } from './engine.js';
+import { MAX_TRIGGER, MAX_FIELD, ROUND_LIMIT } from './engine.js';
 import { cardEl } from './ui.js';
 
 let dispatch = () => {};
@@ -119,6 +119,7 @@ function renderHand() {
 
 function renderBanner() {
   const b = $('battle-banner');
+  const round = `【ターン ${Math.min(ROUND_LIMIT, Math.ceil(view.turn / 2))}/${ROUND_LIMIT}】`;
   if (view.phase === 'over') {
     b.textContent = '対戦終了';
   } else if (pendingEvolve !== null) {
@@ -134,9 +135,9 @@ function renderBanner() {
   } else if (view.phase === 'mulligan') {
     b.textContent = '手札の引き直しを選択中…';
   } else if (isMyMain()) {
-    b.textContent = 'あなたのターン：カードをプレイするか、ユニットでアタック！';
+    b.textContent = `${round} あなたのターン：カードをプレイするか、ユニットでアタック！`;
   } else {
-    b.textContent = '相手のターンです…';
+    b.textContent = `${round} 相手のターンです…`;
   }
 }
 

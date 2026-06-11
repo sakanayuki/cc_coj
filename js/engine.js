@@ -22,7 +22,9 @@ export const MAX_HAND = 7;
 export const MAX_CP = 7;
 export const START_LIFE = 7;
 export const START_HAND = 4;
-export const TURN_LIMIT = 50; // 超過時はライフ判定（多い方の勝ち、同値は引き分け）
+// 各プレイヤー10ターンずつ。後攻が10ターン目を終えたらライフが少ない方が敗北
+// （ライフ同値の場合は後攻の勝ち）
+export const ROUND_LIMIT = 10;
 
 let uidSeq = 1;
 
@@ -268,15 +270,13 @@ function end(state, winnerSeat, reason) {
 function startTurn(state, seat) {
   state.active = seat;
   state.turn++;
-  if (state.turn > TURN_LIMIT) {
+  // 後攻（seat1）が10ターン目を終えた時点でライフ判定
+  if (state.turn > ROUND_LIMIT * 2) {
     const [l0, l1] = [state.players[0].life, state.players[1].life];
     if (l0 === l1) {
-      state.phase = 'over';
-      state.winner = -1;
-      state.reason = `ターン上限（${TURN_LIMIT}）到達・ライフ同値`;
-      pushLog(state, '引き分け！（ターン上限到達）');
+      end(state, 1, `ターン上限（${ROUND_LIMIT}）到達・ライフ同値のため後攻の勝ち`);
     } else {
-      end(state, l0 > l1 ? 0 : 1, `ターン上限（${TURN_LIMIT}）到達・ライフ判定`);
+      end(state, l0 > l1 ? 0 : 1, `ターン上限（${ROUND_LIMIT}）到達・ライフが少ない方の敗北`);
     }
     return;
   }
@@ -289,7 +289,7 @@ function startTurn(state, seat) {
     u.act = true;
     u.sick = false;
   }
-  pushLog(state, `―― ターン${state.turn}: ${state.names[seat]}のターン ――`);
+  pushLog(state, `―― ターン${Math.ceil(state.turn / 2)}/${ROUND_LIMIT}: ${state.names[seat]}のターン ――`);
   drawN(state, seat, 2);
   fireTriggers(state, seat, 'turnStart', {});
 }

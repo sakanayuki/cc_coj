@@ -42,6 +42,21 @@ ok(state.players[0].hand.length === 6, 'ターン開始で2枚ドロー');
 ok(applyAction(state, 1, { a: 'endTurn' }) === false, '非手番プレイヤーの操作は拒否');
 ok(applyAction(state, 0, { a: 'playUnit', hand: 99 }) === false, '存在しない手札は拒否');
 
+// ターン上限のライフ判定
+console.log('== ターン上限ルール ==');
+{
+  const s = createGame(decks[0], decks[1], ['先攻', '後攻']);
+  applyAction(s, 0, { a: 'keep' });
+  applyAction(s, 1, { a: 'keep' });
+  let guard = 0;
+  while (s.phase !== 'over' && guard++ < 100) {
+    applyAction(s, s.active, { a: 'endTurn' });
+  }
+  ok(s.phase === 'over', '両者が何もしなくても決着する');
+  ok(s.turn === 21, '後攻の10ターン目終了時に判定（21ターン目開始で判定）');
+  ok(s.winner === 1, 'ライフ同値なら後攻の勝ち');
+}
+
 // ランダムシミュレーション: 大量のランダム対戦でエラー・不変条件違反がないこと
 console.log('== ランダムシミュレーション ==');
 function randomAction(s, seat) {
