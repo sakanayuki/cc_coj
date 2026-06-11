@@ -4,13 +4,13 @@
 //   ホスト(seat 0)がゲームエンジンを実行し、ゲスト(seat 1)はアクションを送信、
 //   ホストが検証して全体の状態（相手の手札等は隠した形）を配信する。
 
-import { validateDeck } from './cards.js';
-import { createGame, applyAction, redact } from './engine.js';
-import * as net from './net.js';
-import * as storage from './storage.js';
-import * as battle from './battle.js';
-import { initDeckScreen, openDeckScreen } from './deck.js';
-import { show, toast } from './ui.js';
+import { validateDeck } from './cards.js?v=4';
+import { createGame, applyAction, redact } from './engine.js?v=4';
+import * as net from './net.js?v=4';
+import * as storage from './storage.js?v=4';
+import * as battle from './battle.js?v=4';
+import { initDeckScreen, openDeckScreen } from './deck.js?v=4';
+import { show, toast } from './ui.js?v=4';
 
 const $ = (id) => document.getElementById(id);
 

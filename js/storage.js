@@ -1,6 +1,6 @@
 // デッキの保存・読込（localStorage）
 
-import { PRESET_DECKS } from './cards.js';
+import { PRESET_DECKS } from './cards.js?v=4';
 
 const KEY_DECKS = 'cojclone_decks';
 const KEY_NAME = 'cojclone_name';

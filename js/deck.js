@@ -1,8 +1,8 @@
 // デッキ構築画面
 
-import { CARDS, CARD_MAP, DECK_SIZE, MAX_COPIES } from './cards.js';
-import { cardEl, toast } from './ui.js';
-import * as storage from './storage.js';
+import { CARDS, CARD_MAP, DECK_SIZE, MAX_COPIES } from './cards.js?v=4';
+import { cardEl, toast } from './ui.js?v=4';
+import * as storage from './storage.js?v=4';
 
 const $ = (id) => document.getElementById(id);
 const COLOR_ORDER = { red: 0, yellow: 1, blue: 2, green: 3, none: 4 };

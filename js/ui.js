@@ -1,6 +1,6 @@
 // 共通UIユーティリティ
 
-import { CARD_MAP, TYPE_NAMES } from './cards.js';
+import { CARD_MAP, TYPE_NAMES } from './cards.js?v=4';
 
 export function show(id) {
   document.querySelectorAll('.screen').forEach(s => {

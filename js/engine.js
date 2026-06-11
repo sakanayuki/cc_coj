@@ -14,7 +14,7 @@
 // - 進化ユニット: 自分のユニットに重ねて召喚。行動権を引き継ぎ、出たターンに攻撃可
 // - マリガン: 対戦開始時、手札を何度でも引き直し可能（両者確定で開始）
 
-import { CARD_MAP } from './cards.js';
+import { CARD_MAP } from './cards.js?v=4';
 
 export const MAX_FIELD = 5;
 export const MAX_TRIGGER = 4;

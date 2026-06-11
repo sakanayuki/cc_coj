@@ -1,8 +1,8 @@
 // 対戦画面のUI制御
 
-import { CARD_MAP, TYPE_NAMES, COLOR_NAMES } from './cards.js';
-import { MAX_TRIGGER, MAX_FIELD, ROUND_LIMIT } from './engine.js';
-import { cardEl } from './ui.js';
+import { CARD_MAP, TYPE_NAMES, COLOR_NAMES } from './cards.js?v=4';
+import { MAX_TRIGGER, MAX_FIELD, ROUND_LIMIT } from './engine.js?v=4';
+import { cardEl } from './ui.js?v=4';
 
 let dispatch = () => {};
 let mySeat = 0;
